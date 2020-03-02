@@ -5,18 +5,21 @@
         <img src="../../assets/img/logo_index.png" alt="">
       </div>
       <!-- 登录表单 -->
-      <el-form :model="loginForm" :rules="loginFormRules" ref="loginFormRef">
+      <el-form :model="loginForm" status-icon :rules="loginFormRules" ref="loginFormRef">
         <!-- 手机号 -->
         <el-form-item prop="mobile">
-          <el-input placeholder="请输入手机号" clearable v-model="loginForm.mobile"></el-input>
+          <el-input
+          placeholder="请输入手机号"
+          v-model="loginForm.mobile"
+          ></el-input>
         </el-form-item>
         <!-- 验证码 -->
         <el-form-item prop="checkCode">
-          <el-input placeholder="请输入验证吗" style="width:60%" clearable v-model="loginForm.checkCode"></el-input>
+          <el-input placeholder="请输入验证吗" style="width:60%" v-model="loginForm.checkCode"></el-input>
           <el-button plain class="fr">发送验证码</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-checkbox ref="checkBoxRef">我已阅读同意用户协议和隐私条款</el-checkbox>
+        <el-form-item prop="checked">
+          <el-checkbox v-model="loginForm.checked">我已阅读同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-button style="width:100%" type="primary" @click="login">登录</el-button>
       </el-form>
@@ -39,22 +42,28 @@ export default {
       if (regCheckCode.test(value)) return callback()
       callback(new Error('验证码无效'))
     }
+    // 自定义验证是否选择协议
+    const checked = (rule, value, callback) => {
+      value ? callback() : callback(new Error('必须勾选同意用户协议'))
+    }
     return {
       loginForm: {
         mobile: '',
-        checkCode: ''
+        checkCode: '',
+        chaeckd: false // 是否同意协议
       },
       loginFormRules: {
         mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }, { validator: checkMobile, trigger: 'blur' }],
-        checkCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }, { validator: checkNum, trigger: 'blur' }]
+        checkCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }, { validator: checkNum, trigger: 'blur' }],
+        checked: [{ validator: checked }]
       }
     }
   },
   methods: {
     login () {
-      console.log(this.$refs.loginFormRef)
+      // 获取 登录表单 实例，调用validate方法
       this.$refs.loginFormRef.validate(valid => {
-
+        if (!valid) return this.$message.error('校验不通过')
       })
     }
   }
@@ -74,6 +83,7 @@ export default {
     transform: translate(-50%,-50%);
     width: 440px;
     height: 340px;
+    background: transparent;
 
     .login-logo{
       margin-bottom: 20px;
@@ -83,5 +93,8 @@ export default {
       }
     }
   }
+}
+.el-checkbox{
+  color: #eee;
 }
 </style>
