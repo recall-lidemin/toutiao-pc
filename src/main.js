@@ -13,7 +13,7 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 Vue.prototype.$axios = axios
 // 配置axios拦截器，为所有请求的请求头添加token
 axios.interceptors.request.use(config => {
-  config.headers.Authorization = window.sessionStorage.getItem('token')
+  config.headers.Authorization = 'Bearer ' + window.sessionStorage.getItem('token')
   return config
 })
 
