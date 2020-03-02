@@ -14,8 +14,8 @@
           ></el-input>
         </el-form-item>
         <!-- 验证码 -->
-        <el-form-item prop="checkCode">
-          <el-input placeholder="请输入验证吗" style="width:60%" v-model="loginForm.checkCode"></el-input>
+        <el-form-item prop="code">
+          <el-input placeholder="请输入验证吗" style="width:60%" v-model="loginForm.code"></el-input>
           <el-button plain class="fr">发送验证码</el-button>
         </el-form-item>
         <el-form-item prop="checked">
@@ -48,13 +48,13 @@ export default {
     }
     return {
       loginForm: {
-        mobile: '',
-        checkCode: '',
+        mobile: '18660946037',
+        code: '246810',
         chaeckd: false // 是否同意协议
       },
       loginFormRules: {
         mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }, { validator: checkMobile, trigger: 'blur' }],
-        checkCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }, { validator: checkNum, trigger: 'blur' }],
+        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }, { validator: checkNum, trigger: 'blur' }],
         checked: [{ validator: checked }]
       }
     }
@@ -62,8 +62,25 @@ export default {
   methods: {
     login () {
       // 获取 登录表单 实例，调用validate方法
-      this.$refs.loginFormRef.validate(valid => {
+      this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return this.$message.error('校验不通过')
+        // this.$axios({
+        //   url: 'authorizations', // 请求地址
+        //   // params: {}, // url参数(get)
+        //   data: this.loginForm, // body请求体参数
+        //   method: 'post' // 请求类型 ：get(可以省略) put post delete
+        // }).then(res => {
+        //   // 返回 token 存储到本地，然后在之后的请求中，每次都要携带该token
+        // }).catch(() => {
+
+        // })
+        const { data: res } = await this.$axios.post('authorizations', this.loginForm).catch(() => {
+          this.$message.error('登录失败')
+        })
+        this.$message.success('登录成功')
+        // 保存token到本地，关闭浏览器会被清除
+        window.sessionStorage.setItem('token', res.data.token)
+        this.$router.push('/home')
       })
     }
   }
