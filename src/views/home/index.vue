@@ -8,53 +8,53 @@
       </div>
       <!-- 侧边栏导航菜单区域 -->
       <el-menu background-color="#323745" text-color="#eee" :unique-opened="true"
-        :collapse="isCollapse" :collapse-transition="false">
+        :collapse="isCollapse" :collapse-transition="false" router>
         <!-- 一级菜单 子菜单 -->
-        <el-menu-item index="1">
+        <el-menu-item index="/home">
           <i class="el-icon-s-home"></i>
           <span>首页</span>
         </el-menu-item>
         <!-- 内容管理 折叠菜单 -->
-        <el-submenu index="2">
+        <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-menu"></i>
             <span>内容管理</span>
           </template>
           <!-- 二级菜单 -->
-          <el-menu-item index="2-1">
+          <el-menu-item index="/home/publish">
             <span>发布文章</span>
           </el-menu-item>
-          <el-menu-item index="2-2">
+          <el-menu-item index="/home/articles">
             <span>内容列表</span>
           </el-menu-item>
-          <el-menu-item index="2-3">
+          <el-menu-item index="/home/comment">
             <span>评论列表</span>
           </el-menu-item>
-          <el-menu-item index="2-4">
+          <el-menu-item index="/home/material">
             <span>素材管理</span>
           </el-menu-item>
         </el-submenu>
         <!-- 粉丝管理 -->
-        <el-submenu index="3">
+        <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>粉丝管理</span>
           </template>
-          <el-menu-item index="3-1">
+          <el-menu-item index="/home/graphic">
             <span slot="title">图文数据</span>
           </el-menu-item>
-          <el-menu-item index="3-2">
+          <el-menu-item index="/home/survey">
             <span slot="title">粉丝概况</span>
           </el-menu-item>
-          <el-menu-item index="3-3">
+          <el-menu-item index="/home/photo">
             <span slot="title">粉丝画像</span>
           </el-menu-item>
-          <el-menu-item index="3-4">
+          <el-menu-item index="/home/list">
             <span slot="title">粉丝列表</span>
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="4">
+        <el-menu-item index="/home/account">
           <i class="el-icon-user-solid"></i>
           <span>账户信息</span>
         </el-menu-item>
@@ -85,7 +85,10 @@
           </el-col>
         </el-row>
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+        <!-- 中间主体区域二级路由容器占位符 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
