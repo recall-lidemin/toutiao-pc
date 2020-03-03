@@ -1,5 +1,9 @@
 <template>
-  <div>main</div>
+  <div>
+    <el-card class="box-card">
+      123
+    </el-card>
+  </div>
 </template>
 
 <script>

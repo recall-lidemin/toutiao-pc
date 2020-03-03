@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import Element from 'element-ui'
+import axios from 'axios'
 import '@/assets/css/index.less'
 // 导入element-ui组件和样式
 import 'element-ui/lib/theme-chalk/index.css'
-import Element from 'element-ui'
-import axios from 'axios'
+// 导入路由导航守卫配置文件
+import './permission'
 
 Vue.use(Element)
 // 配置 axios 基地址，挂载到Vue原型对象
