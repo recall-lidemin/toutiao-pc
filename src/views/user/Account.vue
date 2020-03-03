@@ -4,6 +4,10 @@
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>账户信息</el-breadcrumb-item>
     </el-breadcrumb>
+    <!-- 卡片 -->
+    <el-card>
+      123
+    </el-card>
   </div>
 </template>
 

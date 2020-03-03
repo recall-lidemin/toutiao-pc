@@ -1,15 +1,15 @@
 <template>
   <el-container>
-    <!-- 侧边栏导航区域 -->
+    <!-- 侧边栏区域 -->
     <el-aside :width="isCollapseWidth">
-      <!-- logo区域 -->
+      <!-- 侧边栏logo区域 -->
       <div class="logo">
         <img src="../../assets/img/logo_admin.png" alt="">
       </div>
       <!-- 侧边栏导航菜单区域 -->
       <el-menu background-color="#323745" text-color="#eee" :unique-opened="true"
         :collapse="isCollapse" :collapse-transition="false" router>
-        <!-- 一级菜单 子菜单 -->
+        <!-- 首页子菜单 -->
         <el-menu-item index="/home">
           <i class="el-icon-s-home"></i>
           <span>首页</span>
@@ -20,7 +20,7 @@
             <i class="el-icon-menu"></i>
             <span>内容管理</span>
           </template>
-          <!-- 二级菜单 -->
+          <!-- 内容管理 二级菜单 -->
           <el-menu-item index="/home/publish">
             <span>发布文章</span>
           </el-menu-item>
@@ -34,12 +34,13 @@
             <span>素材管理</span>
           </el-menu-item>
         </el-submenu>
-        <!-- 粉丝管理 -->
+        <!-- 粉丝管理 折叠菜单-->
         <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>粉丝管理</span>
           </template>
+          <!-- 粉丝管理 二级菜单 -->
           <el-menu-item index="/home/graphic">
             <span slot="title">图文数据</span>
           </el-menu-item>
@@ -53,15 +54,15 @@
             <span slot="title">粉丝列表</span>
           </el-menu-item>
         </el-submenu>
-
+        <!-- 账户信息子菜单 -->
         <el-menu-item index="/home/account">
           <i class="el-icon-user-solid"></i>
           <span>账户信息</span>
         </el-menu-item>
       </el-menu>
-
     </el-aside>
-    <el-container>
+    <!-- 右侧主体区域 -->
+    <el-container class="right">
       <!-- 主体头部区域 -->
       <el-header>
         <el-row type="flex" class="header" align="middle">
@@ -69,7 +70,7 @@
             <i class="el-icon-s-fold" style="cursor: pointer" @click="showCollspse"></i>
             <span style="margin-left:5px">XXX股份有限公司</span>
           </el-col>
-          <el-col :span="12" class="right">
+          <el-col :span="12" class="user">
             <el-row type="flex" justify="end" align="middle">
               <img :src="userInfo.photo" alt="">
               <!-- 点击下拉菜单项会触发command事件 -->
@@ -85,8 +86,9 @@
           </el-col>
         </el-row>
       </el-header>
+      <!-- 主体内容区域 -->
       <el-main>
-        <!-- 中间主体区域二级路由容器占位符 -->
+        <!-- 主体区域二级路由容器占位符 -->
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -97,7 +99,9 @@
 export default {
   data() {
     return {
+      // 用户信息对象
       userInfo: {},
+      // 控制侧边栏是否折叠
       isCollapse: false
     }
   },
@@ -116,22 +120,23 @@ export default {
         return this.$message.error('获取信息失败')
       }
       this.userInfo = res.data.data
-      console.log(this.userInfo)
     },
+    // 监听下拉选择事件
     handleCommand(command) {
-      console.log(command)
       if (command === 'userinfo') {
         // 跳转到个人信息页面
         this.$router.push('/home/account')
       } else if (command === 'git') {
         window.location.href = 'https://github.com/recall-lidemin/toutiao-pc'
       } else {
+        // 清除token退出
         window.sessionStorage.removeItem('token')
         this.$router.push('/login')
       }
     }
   },
   computed: {
+    // 计算折叠栏宽度
     isCollapseWidth() {
       return this.isCollapse ? '64px' : '200px'
     }
@@ -159,11 +164,18 @@ export default {
       color: #ccc;
     }
   }
+  .right {
+    background-color: #eee;
+
+    .el-header {
+      background-color: #fff;
+    }
+  }
 }
 .header {
   height: 60px;
 
-  .right {
+  .user {
     img {
       width: 30px;
       border-radius: 50%;

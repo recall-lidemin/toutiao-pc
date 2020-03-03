@@ -44,11 +44,13 @@ export default {
       value ? callback() : callback(new Error('必须勾选同意用户协议'))
     }
     return {
+      // 登录表单
       loginForm: {
         mobile: '18660946037',
         code: '246810',
         chaeckd: false // 是否同意协议
       },
+      // 登录表单校验规则
       loginFormRules: {
         mobile: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -83,7 +85,7 @@ export default {
             this.$message.error('登录失败')
           })
         this.$message.success('登录成功')
-        // 保存token到本地，关闭浏览器会被清除
+        // 保存token到本地，关闭浏览器token就会被清除
         window.sessionStorage.setItem('token', res.data.token)
         this.$router.push('/home')
       })
