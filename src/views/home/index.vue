@@ -122,6 +122,7 @@ export default {
       console.log(command)
       if (command === 'userinfo') {
         // 跳转到个人信息页面
+        this.$router.push('/home/account')
       } else if (command === 'git') {
         window.location.href = 'https://github.com/recall-lidemin/toutiao-pc'
       } else {
