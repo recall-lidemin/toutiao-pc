@@ -72,11 +72,13 @@
           <el-col :span="12" class="right">
             <el-row type="flex" justify="end" align="middle">
               <img :src="userInfo.photo" alt="">
-              <el-dropdown trigger="click">
+              <!-- 点击下拉菜单项会触发command事件 -->
+              <el-dropdown trigger="click" @command="handleCommand">
                 <span>{{ userInfo.name }}</span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>个人信息</el-dropdown-item>
-                  <el-dropdown-item>退出</el-dropdown-item>
+                  <el-dropdown-item command="userinfo">个人信息</el-dropdown-item>
+                  <el-dropdown-item command="git">git地址</el-dropdown-item>
+                  <el-dropdown-item command="logout">退出</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-row>
@@ -100,9 +102,11 @@ export default {
     this.getUserInfo()
   },
   methods: {
+    // 控制侧边栏的展开与关闭
     showCollspse() {
       this.isCollapse = !this.isCollapse
     },
+    // 获取当前登录用户信息
     async getUserInfo() {
       const res = await this.$axios.get('user/profile')
       if (res.status !== 200) {
@@ -110,6 +114,17 @@ export default {
       }
       this.userInfo = res.data.data
       console.log(this.userInfo)
+    },
+    handleCommand(command) {
+      console.log(command)
+      if (command === 'userinfo') {
+        // 跳转到个人信息页面
+      } else if (command === 'git') {
+        window.location.href = 'https://github.com/recall-lidemin/toutiao-pc'
+      } else {
+        window.sessionStorage.removeItem('token')
+        this.$router.push('/login')
+      }
     }
   },
   computed: {
