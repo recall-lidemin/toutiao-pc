@@ -1,46 +1,37 @@
 <template>
   <el-container>
-    <el-aside width="200px">
+    <!-- 侧边栏导航区域 -->
+    <el-aside :width="isCollapseWidth">
       <!-- logo区域 -->
       <div class="logo">
         <img src="../../assets/img/logo_admin.png" alt="">
       </div>
-      <!-- 侧边栏区域 -->
-      <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b">
-      <!-- 一级菜单 -->
-        <el-menu-item index="4">
-          <i class="el-icon-location"></i>
-          <span slot="title">首页</span>
+      <!-- 侧边栏导航菜单区域 -->
+      <el-menu background-color="#323745" text-color="#eee" :unique-opened="true"
+        :collapse="isCollapse" :collapse-transition="false">
+        <!-- 一级菜单 子菜单 -->
+        <el-menu-item index="1">
+          <i class="el-icon-s-home"></i>
+          <span>首页</span>
         </el-menu-item>
-
+        <!-- 内容管理 折叠菜单 -->
         <el-submenu index="2">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-menu"></i>
             <span>内容管理</span>
           </template>
           <!-- 二级菜单 -->
           <el-menu-item index="2-1">
-            <i class="el-icon-menu"></i>
-            <span slot="title">发布文章</span>
+            <span>发布文章</span>
           </el-menu-item>
           <el-menu-item index="2-2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">内容列表</span>
+            <span>内容列表</span>
           </el-menu-item>
           <el-menu-item index="2-3">
-            <i class="el-icon-menu"></i>
-            <span slot="title">评论列表</span>
+            <span>评论列表</span>
           </el-menu-item>
           <el-menu-item index="2-4">
-            <i class="el-icon-menu"></i>
-            <span slot="title">素材管理</span>
+            <span>素材管理</span>
           </el-menu-item>
         </el-submenu>
         <!-- 粉丝管理 -->
@@ -50,31 +41,48 @@
             <span>粉丝管理</span>
           </template>
           <el-menu-item index="3-1">
-            <i class="el-icon-menu"></i>
             <span slot="title">图文数据</span>
           </el-menu-item>
           <el-menu-item index="3-2">
-            <i class="el-icon-menu"></i>
             <span slot="title">粉丝概况</span>
           </el-menu-item>
           <el-menu-item index="3-3">
-            <i class="el-icon-menu"></i>
             <span slot="title">粉丝画像</span>
           </el-menu-item>
           <el-menu-item index="3-4">
-            <i class="el-icon-menu"></i>
             <span slot="title">粉丝列表</span>
           </el-menu-item>
         </el-submenu>
 
         <el-menu-item index="4">
-            <i class="el-icon-location"></i>
-            <span slot="title">账户信息</span>
+          <i class="el-icon-user-solid"></i>
+          <span>账户信息</span>
         </el-menu-item>
       </el-menu>
+
     </el-aside>
     <el-container>
-      <el-header>Header</el-header>
+      <!-- 主体头部区域 -->
+      <el-header>
+        <el-row type="flex" class="header" align="middle">
+          <el-col :span="12">
+            <i class="el-icon-s-fold" style="cursor: pointer" @click="showCollspse"></i>
+            <span style="margin-left:5px">XXX股份有限公司</span>
+          </el-col>
+          <el-col :span="12" class="right">
+            <el-row type="flex" justify="end" align="middle">
+              <img :src="userInfo.photo" alt="">
+              <el-dropdown trigger="click">
+                <span>{{ userInfo.name }}</span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>个人信息</el-dropdown-item>
+                  <el-dropdown-item>退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-row>
+          </el-col>
+        </el-row>
+      </el-header>
       <el-main>Main</el-main>
     </el-container>
   </el-container>
@@ -82,25 +90,68 @@
 
 <script>
 export default {
+  data() {
+    return {
+      userInfo: {},
+      isCollapse: false
+    }
+  },
+  created() {
+    this.getUserInfo()
+  },
+  methods: {
+    showCollspse() {
+      this.isCollapse = !this.isCollapse
+    },
+    async getUserInfo() {
+      const res = await this.$axios.get('user/profile')
+      if (res.status !== 200) {
+        return this.$message.error('获取信息失败')
+      }
+      this.userInfo = res.data.data
+      console.log(this.userInfo)
+    }
+  },
+  computed: {
+    isCollapseWidth() {
+      return this.isCollapse ? '64px' : '200px'
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
-.el-container{
+.el-container {
   height: 100%;
-box-sizing: border-box;
-  .el-aside{
-
+  .el-aside {
     height: 100%;
+    box-sizing: border-box;
     background-color: #2e2f32;
-
-    .logo{
+    .logo {
       text-align: center;
-      padding: 15px;
+      padding: 15px 32px 15px 32px;
 
-      img{
-        width: 120px;
+      img {
+        width: 100%;
       }
+    }
+    .el-menu {
+      border-right: none;
+      color: #ccc;
+    }
+  }
+}
+.header {
+  height: 60px;
+
+  .right {
+    img {
+      width: 30px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    span {
+      cursor: pointer;
     }
   }
 }

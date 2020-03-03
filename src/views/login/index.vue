@@ -8,10 +8,7 @@
       <el-form :model="loginForm" status-icon :rules="loginFormRules" ref="loginFormRef">
         <!-- 手机号 -->
         <el-form-item prop="mobile">
-          <el-input
-          placeholder="请输入手机号"
-          v-model="loginForm.mobile"
-          ></el-input>
+          <el-input placeholder="请输入手机号" v-model="loginForm.mobile"></el-input>
         </el-form-item>
         <!-- 验证码 -->
         <el-form-item prop="code">
@@ -29,7 +26,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     // 自定义验证手机号
     const checkMobile = (rule, value, callback) => {
       const regMobile = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
@@ -53,14 +50,20 @@ export default {
         chaeckd: false // 是否同意协议
       },
       loginFormRules: {
-        mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }, { validator: checkMobile, trigger: 'blur' }],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }, { validator: checkNum, trigger: 'blur' }],
+        mobile: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { validator: checkMobile, trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { validator: checkNum, trigger: 'blur' }
+        ],
         checked: [{ validator: checked }]
       }
     }
   },
   methods: {
-    login () {
+    login() {
       // 获取 登录表单 实例，调用validate方法
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return this.$message.error('校验不通过')
@@ -74,9 +77,11 @@ export default {
         // }).catch(() => {
 
         // })
-        const { data: res } = await this.$axios.post('authorizations', this.loginForm).catch(() => {
-          this.$message.error('登录失败')
-        })
+        const { data: res } = await this.$axios
+          .post('authorizations', this.loginForm)
+          .catch(() => {
+            this.$message.error('登录失败')
+          })
         this.$message.success('登录成功')
         // 保存token到本地，关闭浏览器会被清除
         window.sessionStorage.setItem('token', res.data.token)
@@ -88,30 +93,30 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.login{
+.login {
   height: 100%;
   background: url(../../assets/img/login_bg.jpg);
   background-size: cover;
 
-  .login-card{
+  .login-card {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 440px;
     height: 340px;
     background: transparent;
 
-    .login-logo{
+    .login-logo {
       margin-bottom: 20px;
       text-align: center;
-      img{
+      img {
         height: 40px;
       }
     }
   }
 }
-.el-checkbox{
+.el-checkbox {
   color: #eee;
 }
 </style>
