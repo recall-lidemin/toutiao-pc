@@ -5,7 +5,6 @@ import HomeMain from '@/views/home/HomeMain.vue'
 import Login from '@/views/login'
 import Publish from '@/views/contentmanage/Publish.vue'
 import Articles from '@/views/contentmanage/Articles.vue'
-import Comment from '@/views/contentmanage/Comment.vue'
 import Material from '@/views/contentmanage/Material.vue'
 import Account from '@/views/user/Account.vue'
 import GraphicData from '@/views/fansmanage/GraphicData.vue'
@@ -39,8 +38,9 @@ const routes = [
         path: 'articles',
         component: Articles
       }, {
+        // 配置路由表的按需导入方式
         path: 'comment',
-        component: Comment
+        component: () => import('@/views/contentmanage/Comment.vue')
       }, {
         path: 'material',
         component: Material

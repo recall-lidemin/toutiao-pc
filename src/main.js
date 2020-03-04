@@ -9,9 +9,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './permission'
 // 导入axios配置文件
 import axios from './utils/request'
+// 导入自定义组件
+import Components from './components'
 
 // 注册elementui
 Vue.use(Element)
+
+// 注册自定义组件
+Vue.use(Components)
 
 // 挂载axios到Vue原型对象，全局调用
 Vue.prototype.$axios = axios
