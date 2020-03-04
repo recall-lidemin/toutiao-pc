@@ -86,7 +86,7 @@ export default {
           })
         this.$message.success('登录成功')
         // 保存token到本地，关闭浏览器token就会被清除
-        window.sessionStorage.setItem('token', res.data.token)
+        window.sessionStorage.setItem('token', res.token)
         this.$router.push('/home')
       })
     }

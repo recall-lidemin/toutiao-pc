@@ -116,10 +116,12 @@ export default {
     // 获取当前登录用户信息
     async getUserInfo() {
       const res = await this.$axios.get('user/profile')
-      if (res.status !== 200) {
+      if (res.message !== 'OK') {
         return this.$message.error('获取信息失败')
       }
-      this.userInfo = res.data.data
+      console.log(res)
+
+      this.userInfo = res.data
     },
     // 监听下拉选择事件
     handleCommand(command) {
