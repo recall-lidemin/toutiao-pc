@@ -1,8 +1,13 @@
 import axios from 'axios'
 import router from '../router'
-
+import JSONBig from 'json-bigint'
 // 配置 axios 基地址
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
+
+// 配置axios处理后端返回的大数字问题,借用第三方的包 json-bigint
+axios.defaults.transformResponse = [function(data) {
+  return JSONBig.parse(data)
+}]
 
 // 配置axios请求拦截器，为所有请求的请求头添加token
 axios.interceptors.request.use(config => {

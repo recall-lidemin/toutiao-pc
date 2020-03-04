@@ -119,7 +119,6 @@ export default {
       if (res.message !== 'OK') {
         return this.$message.error('获取信息失败')
       }
-      console.log(res)
 
       this.userInfo = res.data
     },
