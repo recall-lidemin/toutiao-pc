@@ -46,7 +46,8 @@ export default {
     return {
       // 登录表单
       loginForm: {
-        mobile: '13911111111',
+        // mobile: '13911111111',
+        mobile: '18660946037',
         code: '246810',
         chaeckd: false // 是否同意协议
       },
