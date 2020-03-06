@@ -26,7 +26,7 @@
                 <el-row type="flex" justify="space-around">
                   <i class="el-icon-star-on" @click="collectPic(item.id,item.is_collected)" v-if="item.is_collected"></i>
                   <i class="el-icon-star-off" @click="collectPic(item.id,item.is_collected)" v-else></i>
-                  <i class="el-icon-delete-solid" @click="delPic"></i>
+                  <i class="el-icon-delete-solid" @click="delPic(item.id)"></i>
                 </el-row>
             </el-card>
           </el-row>
@@ -105,11 +105,31 @@ export default {
     },
     // 点击收藏事件
     async collectPic(id, collected) {
-      await this.$axios.put(`user/images/${id}`, { collect: !collected })
-      this.getImgList()
+      const res = await this.$axios.put(`user/images/${id}`, { collect: !collected })
+      if (res.data.collect === false) {
+        this.$message.info('取消收藏')
+        this.getImgList()
+      } else {
+        this.getImgList()
+        this.$message.success('收藏成功')
+      }
     },
     // 点击删除事件
-    delPic() {}
+    async delPic(id) {
+      const confirmResult = await this.$confirm('此操作将永久删除该文件, 是否继续?', '删除图片', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('删除操作已取消')
+      }
+
+      await this.$axios.delete(`user/images/${id}`)
+      this.getImgList()
+      this.$message.success('删除成功')
+    }
   },
   created() {
     // 获取全部图片素材
@@ -150,5 +170,18 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.el-icon-delete-solid{
+  color: #f56c6c;
+}
+
+.el-icon-star-on{
+  font-size: 20px;
+  color: #e6a23c;
+}
+
+.el-icon-star-off{
+  font-size: 20px;
 }
 </style>
