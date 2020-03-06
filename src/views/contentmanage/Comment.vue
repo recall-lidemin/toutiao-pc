@@ -23,41 +23,59 @@
       <!-- 搜索区域 -->
       <el-row>
         <el-col :span="5">
-          <el-input placeholder="请输入内容" v-model="queryInfo.query" class="input-with-select" clearable>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容"
+            v-model="queryInfo.query"
+            class="input-with-select" clearable>
+            <el-button slot="append" icon="el-icon-search">
+            </el-button>
           </el-input>
         </el-col>
       </el-row>
 
       <!-- 表格区域 -->
-      <el-table :data="commentLit" border stripe>
+      <el-table  v-loading="loading" :data="commentLit" border stripe>
         <el-table-column type="index"></el-table-column>
-        <el-table-column label="标题" prop="title"></el-table-column>
-        <el-table-column label="评论状态" prop="comment_status" width="100">
+        <el-table-column label="标题" prop="title">
+        </el-table-column>
+        <el-table-column label="评论状态" prop="comment_status"
+          width="100">
           <template slot-scope="scope">
-            <el-switch disabled v-model="scope.row.comment_status" active-color="#13ce66"
+            <el-switch disabled
+              v-model="scope.row.comment_status"
+              active-color="#13ce66"
               inactive-color="#ff4949">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="总评论数" prop="total_comment_count" width="120"></el-table-column>
-        <el-table-column label="粉丝评论数" prop="fans_comment_count" width="120"></el-table-column>
+        <el-table-column label="总评论数"
+          prop="total_comment_count" width="120">
+        </el-table-column>
+        <el-table-column label="粉丝评论数"
+          prop="fans_comment_count" width="120">
+        </el-table-column>
         <el-table-column label="操作" width="300">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" size="mini">修改</el-button>
-            <el-button type="primary" icon="el-icon-edit" size="mini"
-              @click="commentClosed(scope.row)">{{ scope.row.comment_status ? '关闭评论' : '打开评论' }}
+            <el-button type="primary" icon="el-icon-edit"
+              size="mini">修改</el-button>
+            <el-button type="primary" icon="el-icon-edit"
+              size="mini" @click="commentClosed(scope.row)">
+              {{ scope.row.comment_status ? '关闭评论' : '打开评论' }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 分页区域 -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryInfo.page" :page-sizes="[10, 20, 30, 40,50]"
-        :page-size="queryInfo.per_page" layout="total, sizes, prev, pager, next, jumper"
+      <el-row type="flex" justify="center" align="middle" style="height:80px">
+        <el-pagination @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.page"
+        :page-sizes="[10, 20, 30, 40,50]"
+        :page-size="queryInfo.per_page"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="total">
-      </el-pagination>
+        </el-pagination>
+      </el-row>
     </el-card>
   </div>
 </template>
@@ -66,6 +84,7 @@
 export default {
   data() {
     return {
+      // 全部评论列表
       commentLit: [],
       // 评论列表查询对象
       queryInfo: {
@@ -74,24 +93,24 @@ export default {
         per_page: 10,
         response_type: 'comment'
       },
-      total: 0
+      // 分页总数
+      total: 0,
+      loading: false
     }
   },
   created() {
     this.getCommentList()
   },
   methods: {
+    // 获取全部评论
     async getCommentList() {
+      this.loading = true
       const res = await this.$axios.get('articles', { params: this.queryInfo })
       this.commentLit = res.data.results
       this.total = res.data.total_count
+      this.loading = false
     },
-    // 查询
-    async getArticles() {
-      const res = await this.$axios.get('search', { params: this.queryInfo })
-      this.commentLit = res.data.results
-    },
-    // 监听关闭评论事件
+    // 监听关闭评论按钮事件
     async commentClosed(info) {
       const mess = info.comment_status ? '打开' : '关闭'
       const confirmResults = await this.$confirm(
@@ -106,7 +125,7 @@ export default {
       if (confirmResults !== 'confirm') {
         return this.$message.info('当前关闭操作已取消')
       }
-
+      // 发送请求更新评论状态
       await this.$axios
         .put(`comments/status?article_id=${info.id}`, {
           allow_comment: !info.comment_status
@@ -133,7 +152,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-table{
+.el-table {
   margin-top: 20px;
 }
 </style>

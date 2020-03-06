@@ -6,7 +6,8 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 
 // 配置axios处理后端返回的大数字问题,借用第三方的包 json-bigint
 axios.defaults.transformResponse = [function(data) {
-  return JSONBig.parse(data)
+  // 需要判断data是否为空，不为空转化返回，为空直接返回空对象，不然会报错
+  return data ? JSONBig.parse(data) : { }
 }]
 
 // 配置axios请求拦截器，为所有请求的请求头添加token
