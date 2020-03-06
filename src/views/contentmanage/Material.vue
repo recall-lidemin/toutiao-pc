@@ -19,32 +19,23 @@
       <!-- tab页签 -->
       <el-tabs v-model="query.collect" @tab-click="handleClick">
         <!-- 全部素材页签 -->
-
         <el-tab-pane label="全部" name="false" class="imglist">
-
           <el-row type="flex" justify="space-between">
             <el-card :body-style="{ padding: '0px' }" v-for="item in allImgList" :key="item.id">
-
               <img :src="item.url" class="image">
-
                 <el-row type="flex" justify="space-around">
-                  <i class="el-icon-star-on" @click="collectPic(item.id,item.is_collected)"></i>
+                  <i class="el-icon-star-on" @click="collectPic(item.id,item.is_collected)" v-if="item.is_collected"></i>
+                  <i class="el-icon-star-off" @click="collectPic(item.id,item.is_collected)" v-else></i>
                   <i class="el-icon-delete-solid" @click="delPic"></i>
                 </el-row>
-
             </el-card>
           </el-row>
-
         </el-tab-pane>
         <!-- 收藏页签 -->
         <el-tab-pane label="收藏" name="true" class="imglist">
           <el-row type="flex" justify="space-between">
             <el-card :body-style="{ padding: '0px' }" v-for="item in allImgList" :key="item.id">
               <img :src="item.url" class="image">
-              <div class="bottom clearfix">
-                <i class="el-icon-star-off"></i>
-                <i class="el-icon-delete"></i>
-              </div>
             </el-card>
           </el-row>
         </el-tab-pane>
@@ -114,9 +105,8 @@ export default {
     },
     // 点击收藏事件
     async collectPic(id, collected) {
-      console.log(id)
-      const res = await this.$axios.put(`user/images/${id}`, { collect: !collected })
-      console.log(res)
+      await this.$axios.put(`user/images/${id}`, { collect: !collected })
+      this.getImgList()
     },
     // 点击删除事件
     delPic() {}
