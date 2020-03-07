@@ -1,24 +1,57 @@
 # toutiao-pc
 
-## Project setup
+### 1.预览地址
+
+- 完成部署
+
+
+
+### 2.项目介绍
+
+#### 2.1技术选型(前端)
+
+- vue
+- vue-router
+- axios
+- element-ui
+
+
+
+#### 2.2功能模块
+
+- 首页
+- 内容管理
+  - 发布文章
+  - 内容列表
+  - 评论列表
+  - 素材管理
+- 粉丝管理
+  - 图文数据
+  - 粉丝概况
+  - 粉丝画像
+  - 粉丝列表
+- 账户信息
+  - 个人信息
+
+
+
+### 3.项目启动
+
+#### 3.1.安装依赖
+
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+#### 3.2.运行启动
+
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+#### 3.3.访问
+
 ```
-yarn build
+http://localhost:8080/
 ```
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
