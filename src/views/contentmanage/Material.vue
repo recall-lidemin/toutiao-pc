@@ -21,7 +21,8 @@
         <!-- 全部素材页签 -->
         <el-tab-pane label="全部" name="false" class="imglist">
           <el-row type="flex" justify="space-between">
-            <el-card :body-style="{ padding: '0px' }" v-for="(item,index) in allImgList" :key="item.id">
+            <el-card :body-style="{ padding: '0px' }" v-for="(item,index) in allImgList"
+              :key="item.id">
               <img :src="item.url" class="image" @click="showPreview(index)">
               <el-row type="flex" justify="space-around">
                 <i class="el-icon-star-on" @click="collectPic(item.id,item.is_collected)"
@@ -36,8 +37,9 @@
         <!-- 收藏页签 -->
         <el-tab-pane label="收藏" name="true" class="imglist">
           <el-row type="flex" justify="space-between">
-            <el-card :body-style="{ padding: '0px' }" v-for="item in allImgList" :key="item.id">
-              <img :src="item.url" class="image">
+            <el-card :body-style="{ padding: '0px' }" v-for="(item,index) in allImgList"
+              :key="item.id">
+              <img :src="item.url" class="image" @click="showPreview(index)">
             </el-card>
           </el-row>
         </el-tab-pane>
@@ -56,7 +58,8 @@
     <el-dialog @opened="opend" title="图片预览" :visible.sync="previewDialogVisible" width="50%"
       @close="previewDialogColsed">
       <!-- 走马灯组件 -->
-      <el-carousel ref="previewRef" :initial-index="currentIndex" :autoplay="false" indicator-position="none" type="card" height="200px">
+      <el-carousel ref="previewRef" :initial-index="currentIndex" :autoplay="false"
+        indicator-position="none" type="card" height="200px">
         <el-carousel-item v-for="item in allImgList" :key="item.id">
           <img :src="item.url" alt="" class="preview">
         </el-carousel-item>
@@ -176,26 +179,29 @@ export default {
 <style lang="less" scoped>
 .imglist {
   display: flex;
-  flex-wrap: wrap;
 
-  .el-card {
-    margin: 15px;
-    padding: 20px;
-    width: 220px;
-    // height: 240px;
-    position: relative;
+  .el-row {
+    flex-wrap: wrap;
 
-    img {
-      width: 180px;
-      height: 130px;
-      cursor: pointer;
-    }
+    .el-card {
+      margin: 15px;
+      padding: 20px;
+      width: 220px;
+      // height: 240px;
+      position: relative;
 
-    .el-row {
-      margin: 20px;
-      font-size: 20px;
-      i {
+      img {
+        width: 180px;
+        height: 130px;
         cursor: pointer;
+      }
+
+      .el-row {
+        margin: 20px;
+        font-size: 20px;
+        i {
+          cursor: pointer;
+        }
       }
     }
   }
@@ -220,7 +226,7 @@ export default {
   font-size: 20px;
 }
 
-.preview{
+.preview {
   width: 100%;
   height: 100%;
 }
