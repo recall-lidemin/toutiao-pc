@@ -21,13 +21,15 @@
         <!-- 全部素材页签 -->
         <el-tab-pane label="全部" name="false" class="imglist">
           <el-row type="flex" justify="space-between">
-            <el-card :body-style="{ padding: '0px' }" v-for="item in allImgList" :key="item.id">
-              <img :src="item.url" class="image">
-                <el-row type="flex" justify="space-around">
-                  <i class="el-icon-star-on" @click="collectPic(item.id,item.is_collected)" v-if="item.is_collected"></i>
-                  <i class="el-icon-star-off" @click="collectPic(item.id,item.is_collected)" v-else></i>
-                  <i class="el-icon-delete-solid" @click="delPic(item.id)"></i>
-                </el-row>
+            <el-card :body-style="{ padding: '0px' }" v-for="(item,index) in allImgList" :key="item.id">
+              <img :src="item.url" class="image" @click="showPreview(index)">
+              <el-row type="flex" justify="space-around">
+                <i class="el-icon-star-on" @click="collectPic(item.id,item.is_collected)"
+                  v-if="item.is_collected"></i>
+                <i class="el-icon-star-off" @click="collectPic(item.id,item.is_collected)"
+                  v-else></i>
+                <i class="el-icon-delete-solid" @click="delPic(item.id)"></i>
+              </el-row>
             </el-card>
           </el-row>
         </el-tab-pane>
@@ -49,6 +51,18 @@
         </el-pagination>
       </el-row>
     </el-card>
+
+    <!-- 预览对话框 -->
+    <el-dialog @opened="opend" title="图片预览" :visible.sync="previewDialogVisible" width="50%"
+      @close="previewDialogColsed">
+      <!-- 走马灯组件 -->
+      <el-carousel ref="previewRef" :initial-index="currentIndex" :autoplay="false" indicator-position="none" type="card" height="200px">
+        <el-carousel-item v-for="item in allImgList" :key="item.id">
+          <img :src="item.url" alt="" class="preview">
+        </el-carousel-item>
+      </el-carousel>
+
+    </el-dialog>
   </div>
 </template>
 
@@ -65,7 +79,10 @@ export default {
         page: 1,
         per_page: 5
       },
-      target: ''
+      target: '',
+      // 控制预览对话框的显示与隐藏
+      previewDialogVisible: false,
+      currentIndex: 0
     }
   },
   methods: {
@@ -105,7 +122,9 @@ export default {
     },
     // 点击收藏事件
     async collectPic(id, collected) {
-      const res = await this.$axios.put(`user/images/${id}`, { collect: !collected })
+      const res = await this.$axios.put(`user/images/${id}`, {
+        collect: !collected
+      })
       if (res.data.collect === false) {
         this.$message.info('取消收藏')
         this.getImgList()
@@ -116,11 +135,15 @@ export default {
     },
     // 点击删除事件
     async delPic(id) {
-      const confirmResult = await this.$confirm('此操作将永久删除该文件, 是否继续?', '删除图片', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(err => err)
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除该文件, 是否继续?',
+        '删除图片',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
 
       if (confirmResult !== 'confirm') {
         return this.$message.info('删除操作已取消')
@@ -129,6 +152,18 @@ export default {
       await this.$axios.delete(`user/images/${id}`)
       this.getImgList()
       this.$message.success('删除成功')
+    },
+    // 预览对话框
+    showPreview(index) {
+      this.currentIndex = index
+      this.previewDialogVisible = true
+    },
+    // 监听预览对话框的关闭
+    previewDialogColsed() {
+      this.currentIndex = 0
+    },
+    opend() {
+      this.$refs.previewRef.setActiveItem(this.currentIndex)
     }
   },
   created() {
@@ -153,16 +188,16 @@ export default {
     img {
       width: 180px;
       height: 130px;
+      cursor: pointer;
     }
 
-    .el-row{
+    .el-row {
       margin: 20px;
       font-size: 20px;
-      i{
+      i {
         cursor: pointer;
       }
     }
-
   }
 }
 
@@ -172,16 +207,21 @@ export default {
   align-items: center;
 }
 
-.el-icon-delete-solid{
+.el-icon-delete-solid {
   color: #f56c6c;
 }
 
-.el-icon-star-on{
+.el-icon-star-on {
   font-size: 20px;
   color: #e6a23c;
 }
 
-.el-icon-star-off{
+.el-icon-star-off {
   font-size: 20px;
+}
+
+.preview{
+  width: 100%;
+  height: 100%;
 }
 </style>
