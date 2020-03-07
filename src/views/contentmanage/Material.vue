@@ -1,14 +1,17 @@
 <template>
   <div>
-    <!-- 面包屑 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-      <el-breadcrumb-item>素材管理</el-breadcrumb-item>
-    </el-breadcrumb>
     <!-- 卡片 -->
     <el-card :body-style="{ paddingTop: '0px' }">
-      <div slot="header" class="clearfix header">
+      <bread-crumb slot="header">
+        <template slot="title">
+          内容管理
+        </template>
+        <template slot="list">
+          评论列表
+        </template>
+      </bread-crumb>
+
+      <div class="clearfix header">
         <span>图片管理</span>
         <!-- 上传组件 自定义上传方法 -->
         <el-upload :show-file-list="false" action="" :http-request="uploadImg">

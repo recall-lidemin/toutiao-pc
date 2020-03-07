@@ -1,16 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/home'
-import HomeMain from '@/views/home/HomeMain.vue'
-import Login from '@/views/login'
-import Publish from '@/views/contentmanage/Publish.vue'
-import Articles from '@/views/contentmanage/Articles.vue'
-import Material from '@/views/contentmanage/Material.vue'
-import Account from '@/views/user/Account.vue'
-import GraphicData from '@/views/fansmanage/GraphicData.vue'
-import FansSurvey from '@/views/fansmanage/FansSurvey.vue'
-import FansPhoto from '@/views/fansmanage/FansPhoto.vue'
-import FansList from '@/views/fansmanage/FansList.vue'
+
+const Home = () => import('@/views/home')
+const HomeMain = () => import('@/views/home/HomeMain.vue')
+const Login = () => import('@/views/login')
+
+const Publish = () => import('@/views/contentmanage/Publish.vue')
+const Material = () => import('@/views/contentmanage/Material.vue')
+const Articles = () => import('@/views/contentmanage/Articles.vue')
+const Comment = () => import('@/views/contentmanage/Comment.vue')
+
+const GraphicData = () => import('@/views/fansmanage/GraphicData.vue')
+const FansSurvey = () => import('@/views/fansmanage/FansSurvey.vue')
+const FansPhoto = () => import('@/views/fansmanage/FansPhoto.vue')
+const FansList = () => import('@/views/fansmanage/FansList.vue')
+
+const Account = () => import('@/views/user/Account.vue')
 
 Vue.use(VueRouter)
 
@@ -40,7 +45,7 @@ const routes = [
       }, {
         // 配置路由表的按需导入方式
         path: 'comment',
-        component: () => import('@/views/contentmanage/Comment.vue')
+        component: Comment
       }, {
         path: 'material',
         component: Material
