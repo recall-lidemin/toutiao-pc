@@ -37,7 +37,7 @@ const routes = [
         path: '',
         component: HomeMain
       }, {
-        path: 'publish',
+        path: 'publish/:id?',
         component: Publish
       }, {
         path: 'articles',

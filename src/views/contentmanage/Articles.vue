@@ -61,7 +61,7 @@
           </div>
         </div>
         <div class="right">
-          <span><i class="el-icon-edit"></i>修改</span>
+          <span @click="editArticles(item.id.toString())"><i class="el-icon-edit"></i>修改</span>
           <span @click="delArticles(item.id.toString())"><i class="el-icon-delete"></i>删除</span>
         </div>
       </div>
@@ -162,6 +162,7 @@ export default {
     dateChanged() {
       this.getArticlesList()
     },
+    // 监听删除
     async delArticles(id) {
       const result = await this.$confirm('您确定删除此条数据吗', '提示', {
         confirmButtonText: '确定',
@@ -180,6 +181,10 @@ export default {
       } catch (e) {
         this.$message.info('已发表文章不允许删除')
       }
+    },
+    // 跳转编辑
+    editArticles(id) {
+      this.$router.push(`/home/publish/${id}`)
     }
   },
   filters: {
