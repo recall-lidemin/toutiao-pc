@@ -102,8 +102,11 @@ export default {
     }
   },
   watch: {
-    status: function() {
-      this.searchForm.page = 1
+    searchForm: {
+      deep: true,
+      handler() {
+        this.searchForm.page = 1
+      }
     }
   },
   created() {
@@ -124,7 +127,6 @@ export default {
         per_page: this.searchForm.per_page
       }
       const res = await this.$axios.get('articles', { params: query })
-      console.log(res)
       this.total = res.data.total_count
       this.articleList = res.data.results
     },
@@ -171,13 +173,13 @@ export default {
         return this.$message.info('删除操作已取消')
       }
 
-      console.log(id)
-
-      const res = await this.$axios.delete(`articles/${id}`)
-      console.log(res
-      )
-      this.getArticlesList()
-      this.$message.success('删除成功')
+      try {
+        await this.$axios.delete(`articles/${id}`)
+        this.getArticlesList()
+        this.$message.success('删除成功')
+      } catch (e) {
+        this.$message.info('已发表文章不允许删除')
+      }
     }
   },
   filters: {
