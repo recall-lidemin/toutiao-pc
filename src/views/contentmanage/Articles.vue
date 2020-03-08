@@ -62,7 +62,7 @@
         </div>
         <div class="right">
           <span><i class="el-icon-edit"></i>修改</span>
-          <span><i class="el-icon-delete"></i>删除</span>
+          <span @click="delArticles(item.id.toString())"><i class="el-icon-delete"></i>删除</span>
         </div>
       </div>
 
@@ -88,7 +88,9 @@ export default {
         status: 5,
         channel_id: null,
         // 日期范围
-        dateRange: []
+        dateRange: [],
+        page: 1,
+        per_page: 10
       },
       // 频道数据数组
       channelsList: [],
@@ -97,6 +99,11 @@ export default {
       defaultImg: require('../../assets/img/avatar.jpg'),
       total: 0
 
+    }
+  },
+  watch: {
+    status: function() {
+      this.searchForm.page = 1
     }
   },
   created() {
@@ -112,8 +119,9 @@ export default {
         channel_id: this.searchForm.channel_id,
         begin_pubdate: this.searchForm.dateRange && this.searchForm.dateRange.length ? this.searchForm.dateRange[0] : null,
         end_pubdate: this.searchForm.dateRange && this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null,
-        page: 1,
-        per_page: 10
+        // 切换条件回到第一页
+        page: this.searchForm.page,
+        per_page: this.searchForm.per_page
       }
       const res = await this.$axios.get('articles', { params: query })
       console.log(res)
@@ -128,7 +136,6 @@ export default {
     // 监听当前选中的频道
     currentSelected() {
       this.getArticlesList()
-      console.log(this.searchForm.channel_id)
     },
     // 监听单选按钮组当前选中的项
     currentStatus() {
@@ -136,20 +143,41 @@ export default {
     },
     // 监听每页条数
     handleSizeChange(newSize) {
-      this.query.per_page = newSize
+      this.searchForm.per_page = newSize
       this.getArticlesList()
     },
     // 监听当前页码
     handleCurrentChange(newPage) {
-      this.query.page = newPage
+      this.searchForm.page = newPage
       this.getArticlesList()
     },
+    // 清除频道触发
     clearChannel() {
       this.searchForm.channel_id = null
       this.getArticlesList()
     },
+    // 监听日期改变
     dateChanged() {
       this.getArticlesList()
+    },
+    async delArticles(id) {
+      const result = await this.$confirm('您确定删除此条数据吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+
+      if (result !== 'confirm') {
+        return this.$message.info('删除操作已取消')
+      }
+
+      console.log(id)
+
+      const res = await this.$axios.delete(`articles/${id}`)
+      console.log(res
+      )
+      this.getArticlesList()
+      this.$message.success('删除成功')
     }
   },
   filters: {
