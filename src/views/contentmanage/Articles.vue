@@ -27,7 +27,7 @@
 
         <el-form-item style="padding-left:50px" label="频道类别：">
           <!-- select选择器 -->
-          <el-select @change="currentSelected" v-model="searchForm.channel_id" placeholder="请选择">
+          <el-select @clear="clearChannel" clearable @change="currentSelected" v-model="searchForm.channel_id" placeholder="请选择">
             <!-- label是显示的值，value是绑定的值 -->
             <el-option v-for="item in channelsList" :key="item.id" :label="item.name"
               :value="item.id">
@@ -37,7 +37,7 @@
 
         <el-form-item style="padding-left:50px" label="日期范围：">
           <!-- 时间选择器 -->
-          <el-date-picker v-model="searchForm.dateRange" type="daterange" range-separator="至"
+          <el-date-picker @change="dateChanged" value-format="yyyy-MM-dd" v-model="searchForm.dateRange" type="daterange" range-separator="至"
             start-placeholder="开始日期" end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
@@ -70,9 +70,9 @@
       <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="query.page"
+      :current-page="searchForm.page"
       :page-sizes="[10, 20, 30, 40,50]"
-      :page-size="query.per_page"
+      :page-size="searchForm.per_page"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
@@ -95,11 +95,8 @@ export default {
       // 全部文章列表
       articleList: [],
       defaultImg: require('../../assets/img/avatar.jpg'),
-      query: {
-        page: 1,
-        per_page: 10
-      },
       total: 0
+
     }
   },
   created() {
@@ -110,7 +107,15 @@ export default {
   methods: {
     // 获取全部文章列表
     async getArticlesList() {
-      const res = await this.$axios.get('articles', { params: this.query })
+      const query = {
+        status: this.searchForm.status === 5 ? null : this.searchForm.status,
+        channel_id: this.searchForm.channel_id,
+        begin_pubdate: this.searchForm.dateRange && this.searchForm.dateRange.length ? this.searchForm.dateRange[0] : null,
+        end_pubdate: this.searchForm.dateRange && this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null,
+        page: 1,
+        per_page: 10
+      }
+      const res = await this.$axios.get('articles', { params: query })
       console.log(res)
       this.total = res.data.total_count
       this.articleList = res.data.results
@@ -120,14 +125,14 @@ export default {
       const res = await this.$axios.get('channels')
       this.channelsList = res.data.channels
     },
+    // 监听当前选中的频道
     currentSelected() {
+      this.getArticlesList()
       console.log(this.searchForm.channel_id)
     },
+    // 监听单选按钮组当前选中的项
     currentStatus() {
-      if (this.searchForm.status === 5) {
-        this.searchForm.status = null
-        this.getArticlesList()
-      }
+      this.getArticlesList()
     },
     // 监听每页条数
     handleSizeChange(newSize) {
@@ -137,6 +142,13 @@ export default {
     // 监听当前页码
     handleCurrentChange(newPage) {
       this.query.page = newPage
+      this.getArticlesList()
+    },
+    clearChannel() {
+      this.searchForm.channel_id = null
+      this.getArticlesList()
+    },
+    dateChanged() {
       this.getArticlesList()
     }
   },
