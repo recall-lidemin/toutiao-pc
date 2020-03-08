@@ -49,7 +49,7 @@
       <div class="articles_item" v-for="item in articleList" :key="item.id.toString()">
         <div class="left">
           <img
-            :src="item.cover.images ? item.cover.images[0] : defaultImg"
+            :src="item.cover.images.length > 0 ? item.cover.images[0] : defaultImg"
             alt="">
 
           <div class="info">
@@ -65,6 +65,17 @@
           <span><i class="el-icon-delete"></i>删除</span>
         </div>
       </div>
+
+      <!-- 分页区域 -->
+      <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="query.page"
+      :page-sizes="[10, 20, 30, 40,50]"
+      :page-size="query.per_page"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
     </el-card>
   </div>
 </template>
@@ -83,7 +94,12 @@ export default {
       channelsList: [],
       // 全部文章列表
       articleList: [],
-      defaultImg: require('../../assets/img/avatar.jpg')
+      defaultImg: require('../../assets/img/avatar.jpg'),
+      query: {
+        page: 1,
+        per_page: 10
+      },
+      total: 0
     }
   },
   created() {
@@ -94,8 +110,9 @@ export default {
   methods: {
     // 获取全部文章列表
     async getArticlesList() {
-      const res = await this.$axios.get('articles')
+      const res = await this.$axios.get('articles', { params: this.query })
       console.log(res)
+      this.total = res.data.total_count
       this.articleList = res.data.results
     },
     // 获取频道列表
@@ -111,6 +128,16 @@ export default {
         this.searchForm.status = null
         this.getArticlesList()
       }
+    },
+    // 监听每页条数
+    handleSizeChange(newSize) {
+      this.query.per_page = newSize
+      this.getArticlesList()
+    },
+    // 监听当前页码
+    handleCurrentChange(newPage) {
+      this.query.page = newPage
+      this.getArticlesList()
     }
   },
   filters: {
@@ -127,6 +154,7 @@ export default {
           return '审核失败'
       }
     },
+
     // 根据状态显示不同类型标签
     tag(value) {
       switch (value) {
