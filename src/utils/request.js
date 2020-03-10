@@ -1,6 +1,7 @@
 import axios from 'axios'
 import router from '../router'
 import JSONBig from 'json-bigint'
+
 // 配置 axios 基地址
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 

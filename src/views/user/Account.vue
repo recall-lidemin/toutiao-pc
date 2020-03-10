@@ -27,7 +27,9 @@
       <!-- 头像 -->
       <div class="advatar">
         <img :src="userForm.photo ? userForm.photo : defaultImg " alt="">
-        <a href="javascript:;" @click="transPhoto">更换头像</a>
+        <el-upload action="" :http-request="uploadImg" :show-file-list="false">
+          <a href="javascript:;">更换头像</a>
+        </el-upload>
       </div>
     </el-card>
   </div>
@@ -63,8 +65,14 @@ export default {
       this.userForm = res.data
       console.log(res)
     },
-    transPhoto() {
+    async uploadImg(params) {
+      // params.file
+      const fd = new FormData()
+      fd.append('photo', params.file)
 
+      const res = await this.$axios.patch('user/photo', fd)
+      console.log(res)
+      this.userForm.photo = res.data.photo
     },
     // 保存用户修改信息
     saveUserInfo() {
@@ -97,6 +105,7 @@ export default {
       width: 100%;
       height: 100%;
       border-radius: 50%;
+      border: 1px solid #ccc;
     }
   }
 }
