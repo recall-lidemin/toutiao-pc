@@ -127,6 +127,27 @@ export default {
     saveimg(url, currentIndex) {
       this.publishForm.cover.images.splice(currentIndex, 1, url)
     }
+  },
+  // 捕捉路由参数的变化
+  // 监听data中数据的变化
+  // 路由在初始化后，会把$route也放在data中
+  watch: {
+    $route: function(to, from) {
+      // to表示新的路由对象
+      // from表示旧的路由对象
+      if (to.params.articleId) {
+        this.getArticlesById(to.params.articleId)
+      } else {
+        this.publishForm = {
+          title: '',
+          content: '',
+          cover: {
+            type: 0,
+            images: [] // 字符串数组，对应type，type为1有一个值，为3有三个值
+          }
+        }
+      }
+    }
   }
 }
 </script>
