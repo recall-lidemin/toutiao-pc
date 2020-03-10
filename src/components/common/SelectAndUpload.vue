@@ -9,17 +9,18 @@
           </el-card>
         </div>
         <!-- 分页区域 -->
- <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="query.page"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="query.per_page"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total">
-    </el-pagination>
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page="query.page" :page-sizes="[10, 20, 30, 40]" :page-size="query.per_page"
+          layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
       </el-tab-pane>
-      <el-tab-pane label="上传图片" name="upload">上传图片</el-tab-pane>
+      <el-tab-pane label="上传图片" name="upload">
+        <!-- 上传组件 -->
+        <el-upload list-type="picture-card" action="" :http-request="uploadImg"
+          :show-file-list="false">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -61,6 +62,16 @@ export default {
     clickImg(url) {
       // 触发父组件selectimg事件，并把url传过去
       this.$emit('selectimg', url)
+    },
+    // 自定义上传函数
+    async uploadImg(params) {
+      const data = new FormData()
+      data.append('image', params.file)
+
+      const res = await this.$axios.post('user/images', data)
+
+      this.$emit('selectimg', res.data.url)
+      console.log(res.data.url)
     }
   }
 }
@@ -80,4 +91,5 @@ export default {
     }
   }
 }
+
 </style>

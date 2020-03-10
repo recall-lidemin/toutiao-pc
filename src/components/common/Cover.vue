@@ -7,11 +7,6 @@
     <el-dialog title="选择封面" :visible.sync="coverDialogVisible" width="50%">
       <!-- 选择和上传组件 -->
       <select-image @selectimg="showImg"></select-image>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="coverDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="coverDialogVisible = false">确 定</el-button>
-      </span>
     </el-dialog>
   </div>
 </template>
@@ -35,6 +30,7 @@ export default {
     },
     showImg(url) {
       this.$emit('saveImg', url, this.currentIndex)
+      this.coverDialogVisible = false
     }
 
   }
