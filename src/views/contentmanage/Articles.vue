@@ -44,7 +44,7 @@
       </el-form>
       <!-- 内容主体区域 -->
       <el-row class="title">
-        <span>共找到100条符合条件的内容</span>
+        <span>共找到{{ total }}条符合条件的内容</span>
       </el-row>
       <div class="articles_item" v-for="item in articleList" :key="item.id.toString()">
         <div class="left">

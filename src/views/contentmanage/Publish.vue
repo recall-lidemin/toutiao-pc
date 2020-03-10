@@ -9,30 +9,28 @@
         <el-breadcrumb-item>发布文章</el-breadcrumb-item>
       </el-breadcrumb>
       <!-- 发布表单 -->
-      <el-form style="margin:20px 0 0 50px" :model="publishForm" :rules="publishFormRules"
-        ref="publishFormRef">
+      <el-form style="margin-left:50px" :model="publishForm" :rules="publishFormRules"
+        ref="publishFormRef" label-width="100px">
         <el-form-item label="标题：" prop="title">
           <el-input placeholder="请输入标题" style="width:60%" v-model="publishForm.title"></el-input>
         </el-form-item>
+        <!-- 富文本编辑器 -->
         <el-form-item label="内容：" prop="content">
-          <el-row>
-            <el-col>
-              <quill-editor v-model="publishForm.content"
-                ref="myQuillEditor">
-              </quill-editor>
-            </el-col>
-          </el-row>
+          <quill-editor style="height:300px" v-model="publishForm.content" ref="myQuillEditor">
+          </quill-editor>
         </el-form-item>
-        <el-form-item label="封面：" prop="cover">
-          <el-radio-group v-model="publishForm.cover.type">
+
+        <el-form-item label="封面：" prop="cover" style="margin-top:80px">
+          <el-radio-group v-model="publishForm.cover.type" @change="changeType">
             <el-radio :label="1">单图</el-radio>
             <el-radio :label="3">三图</el-radio>
             <el-radio :label="0">无图</el-radio>
             <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
-          <el-row type="flex">
-          </el-row>
         </el-form-item>
+        <!-- 放置cover组件,子父传值，通过属性绑定传，通过props接收 -->
+        <cover-image :list="publishForm.cover.images" @saveImg="saveimg"></cover-image>
+
         <el-form-item label="频道：" prop="channel_id">
           <!-- select选择器 -->
           <el-select clearable v-model="publishForm.channel_id" placeholder="请选择">
@@ -52,6 +50,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -111,11 +110,26 @@ export default {
     async getArticlesById(id) {
       const res = await this.$axios.get(`articles/${id}`)
       this.publishForm = res.data
+    },
+    // 监听cover的change事件，确定上传几张图片
+    changeType() {
+      if (this.publishForm.cover.type === 0) {
+        this.publishForm.cover.images = []
+      } else if (this.publishForm.cover.type === 1) {
+        this.publishForm.cover.images = ['']
+      } else if (this.publishForm.cover.type === 3) {
+        this.publishForm.cover.images = ['', '', '']
+      } else {
+        this.publishForm.cover.images = []
+      }
+    },
+    // 接收子组件传值
+    saveimg(url, currentIndex) {
+      this.publishForm.cover.images.splice(currentIndex, 1, url)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
 </style>
