@@ -14,7 +14,7 @@
 - vue-router
 - axios
 - element-ui
-
+- 组件化开发
 
 
 #### 2.2功能模块

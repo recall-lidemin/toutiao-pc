@@ -17,9 +17,15 @@ const FansList = () => import('@/views/fansmanage/FansList.vue')
 
 const Account = () => import('@/views/user/Account.vue')
 
+const Error = () => import('@/views/404.vue')
+
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '*', // 匹配所有找不到路径的页面
+    component: Error
+  },
   {
     path: '/',
     redirect: '/login'
