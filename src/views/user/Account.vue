@@ -63,7 +63,6 @@ export default {
     async getUserInfo() {
       const res = await this.$axios.get('user/profile')
       this.userForm = res.data
-      console.log(res)
     },
     async uploadImg(params) {
       // params.file
@@ -71,7 +70,7 @@ export default {
       fd.append('photo', params.file)
 
       const res = await this.$axios.patch('user/photo', fd)
-      console.log(res)
+
       this.userForm.photo = res.data.photo
     },
     // 保存用户修改信息

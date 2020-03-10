@@ -99,8 +99,6 @@ export default {
       })
       this.query.total = res.data.total_count
       this.allImgList = res.data.results
-
-      console.log(res)
     },
     // 监听页签切换事件
     handleClick() {

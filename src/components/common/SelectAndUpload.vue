@@ -47,7 +47,7 @@ export default {
     // 获取全部素材
     async getImgList() {
       const res = await this.$axios.get('user/images', { params: this.query })
-      console.log(res)
+
       this.imgList = res.data.results
       this.total = res.data.total_count
     },
@@ -71,7 +71,6 @@ export default {
       const res = await this.$axios.post('user/images', data)
 
       this.$emit('selectimg', res.data.url)
-      console.log(res.data.url)
     }
   }
 }
