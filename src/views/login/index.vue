@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { login } from '../../api/login.js'
 export default {
   data() {
     // 自定义验证手机号
@@ -88,8 +89,7 @@ export default {
         // }).catch(() => {
 
         // })
-        const { data: res } = await this.$axios
-          .post('authorizations', this.loginForm)
+        const { data: res } = await login(this.loginForm)
           .catch(() => {
             this.$message.error('登录失败')
           })

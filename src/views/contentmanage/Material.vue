@@ -73,6 +73,8 @@
 </template>
 
 <script>
+import { getImgList, uploadImg, collectPic, delPic } from '../../api/material.js'
+
 export default {
   data() {
     return {
@@ -94,9 +96,7 @@ export default {
   methods: {
     // 获取图片素材
     async getImgList() {
-      const res = await this.$axios.get('user/images', {
-        params: this.query
-      })
+      const res = await getImgList(this.query)
       this.query.total = res.data.total_count
       this.allImgList = res.data.results
     },
@@ -120,15 +120,14 @@ export default {
       const data = new FormData()
       data.append('image', params.file)
 
-      await this.$axios.post('user/images', data)
+      await uploadImg(data)
 
       this.getImgList()
     },
     // 点击收藏事件
     async collectPic(id, collected) {
-      const res = await this.$axios.put(`user/images/${id}`, {
-        collect: !collected
-      })
+      const res = await collectPic(id, collected)
+
       if (res.data.collect === false) {
         this.$message.info('取消收藏')
         this.getImgList()
@@ -153,7 +152,8 @@ export default {
         return this.$message.info('删除操作已取消')
       }
 
-      await this.$axios.delete(`user/images/${id}`)
+      await delPic(id)
+
       this.getImgList()
       this.$message.success('删除成功')
     },

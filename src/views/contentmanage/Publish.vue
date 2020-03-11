@@ -50,7 +50,7 @@
 </template>
 
 <script>
-
+import { getChannelsList, publish, getArticlesById } from '../../api/publish.js'
 export default {
   data() {
     return {
@@ -82,7 +82,7 @@ export default {
   methods: {
     // 获取频道列表
     async getChannelsList() {
-      const res = await this.$axios.get('channels')
+      const res = await getChannelsList()
       this.channelsList = res.data.channels
     },
     publish(draft) {
@@ -93,14 +93,7 @@ export default {
           return this.$message.info('请填写必填项')
         }
         // 根据id是否存在，调用不同的接口和方法
-        await this.$axios({
-          url: id ? `articles/${id}` : 'articles',
-          method: id ? 'put' : 'post',
-          params: {
-            draft
-          },
-          data: this.publishForm
-        })
+        await publish(id, draft, this.publishForm)
 
         this.$message.success('发表成功')
         this.$router.push('/home/articles')
@@ -108,7 +101,7 @@ export default {
     },
     // 根据id获取文章
     async getArticlesById(id) {
-      const res = await this.$axios.get(`articles/${id}`)
+      const res = await getArticlesById(id)
       this.publishForm = res.data
     },
     // 监听cover的change事件，确定上传几张图片

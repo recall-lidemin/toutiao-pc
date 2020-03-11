@@ -97,7 +97,7 @@
 
 <script>
 import eventBus from '../../utils/eventBus.js'
-
+import { getUserInfo } from '../../api/home.js'
 export default {
   data() {
     return {
@@ -121,7 +121,7 @@ export default {
     },
     // 获取当前登录用户信息
     async getUserInfo() {
-      const res = await this.$axios.get('user/profile')
+      const res = await getUserInfo()
       if (res.message !== 'OK') {
         return this.$message.error('获取信息失败')
       }

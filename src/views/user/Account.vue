@@ -37,6 +37,7 @@
 
 <script>
 import eventBus from '../../utils/eventBus.js'
+import { getUserInfo, uploadImg, saveUserInfo } from '../../api/user'
 export default {
   data() {
     return {
@@ -62,7 +63,7 @@ export default {
   },
   methods: {
     async getUserInfo() {
-      const res = await this.$axios.get('user/profile')
+      const res = await getUserInfo()
       this.userForm = res.data
     },
     async uploadImg(params) {
@@ -70,7 +71,7 @@ export default {
       const fd = new FormData()
       fd.append('photo', params.file)
 
-      const res = await this.$axios.patch('user/photo', fd)
+      const res = await uploadImg(fd)
 
       this.userForm.photo = res.data.photo
 
@@ -83,7 +84,7 @@ export default {
           return this.$message.info('请检查必填项')
         }
 
-        await this.$axios.patch('user/profile', this.userForm)
+        await saveUserInfo(this.userForm)
 
         this.$message.success('修改成功')
         // 利用eventBus方案，监听用户信息改变，改变后触发userUpdate事件

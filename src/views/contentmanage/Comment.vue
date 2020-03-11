@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import { getCommentList, commentClosed } from '../../api/comment.js'
+
 export default {
   data() {
     return {
@@ -105,7 +107,7 @@ export default {
     // 获取全部评论
     async getCommentList() {
       this.loading = true
-      const res = await this.$axios.get('articles', { params: this.queryInfo })
+      const res = await getCommentList(this.queryInfo)
       this.commentLit = res.data.results
       this.total = res.data.total_count
       this.loading = false
@@ -126,10 +128,7 @@ export default {
         return this.$message.info('当前关闭操作已取消')
       }
       // 发送请求更新评论状态
-      await this.$axios
-        .put(`comments/status?article_id=${info.id}`, {
-          allow_comment: !info.comment_status
-        })
+      await commentClosed(info.id, info.comment_status)
         .catch(() => {
           this.$message.error('操作失败')
         })

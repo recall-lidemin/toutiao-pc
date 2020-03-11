@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import { getArticlesList, delArticles } from '../../api/articles.js'
+import { getChannelsList } from '../../api/publish'
 export default {
   data() {
     return {
@@ -126,13 +128,13 @@ export default {
         page: this.searchForm.page,
         per_page: this.searchForm.per_page
       }
-      const res = await this.$axios.get('articles', { params: query })
+      const res = await getArticlesList(query)
       this.total = res.data.total_count
       this.articleList = res.data.results
     },
     // 获取频道列表
     async getChannelsList() {
-      const res = await this.$axios.get('channels')
+      const res = await getChannelsList()
       this.channelsList = res.data.channels
     },
     // 监听当前选中的频道
@@ -175,7 +177,7 @@ export default {
       }
 
       try {
-        await this.$axios.delete(`articles/${id}`)
+        await delArticles(id)
         this.getArticlesList()
         this.$message.success('删除成功')
       } catch (e) {
