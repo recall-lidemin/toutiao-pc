@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus.js'
 export default {
   data() {
     return {
@@ -72,6 +73,8 @@ export default {
       const res = await this.$axios.patch('user/photo', fd)
 
       this.userForm.photo = res.data.photo
+
+      eventBus.$emit('userUpdate')
     },
     // 保存用户修改信息
     saveUserInfo() {
@@ -83,6 +86,8 @@ export default {
         await this.$axios.patch('user/profile', this.userForm)
 
         this.$message.success('修改成功')
+        // 利用eventBus方案，监听用户信息改变，改变后触发userUpdate事件
+        eventBus.$emit('userUpdate')
       })
     }
   }

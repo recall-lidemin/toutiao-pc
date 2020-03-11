@@ -96,6 +96,8 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus.js'
+
 export default {
   data() {
     return {
@@ -107,6 +109,10 @@ export default {
   },
   created() {
     this.getUserInfo()
+    // 利用eventBus方案，监听username的变化，然后重新获取
+    eventBus.$on('userUpdate', () => {
+      this.getUserInfo()
+    })
   },
   methods: {
     // 控制侧边栏的展开与关闭

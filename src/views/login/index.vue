@@ -1,5 +1,13 @@
 <template>
   <div class="login">
+    <div class="box">
+      <div class="public left"></div>
+      <div class="public right"></div>
+      <div class="public top"></div>
+      <div class="public bottom"></div>
+      <div class="public before"></div>
+      <div class="public after"></div>
+    </div>
     <el-card class="login-card">
       <div class="login-logo">
         <img src="../../assets/img/logo_index.png" alt="">
@@ -97,9 +105,86 @@ export default {
 
 <style lang="less" scoped>
 .login {
+  position: relative;
   height: 100%;
   background: url(../../assets/img/login_bg.jpg);
   background-size: cover;
+  overflow: hidden;
+  background: radial-gradient(
+    100% 100% at top center,
+    rgb(218, 50, 50),
+    rgb(75, 75, 197)
+  );
+
+  @keyframes move {
+    0% {
+      transform-origin: center;
+      transform: rotateX(30deg) rotateY(45deg) translate(-999px,-999px);
+    }
+
+    50% {
+      transform: rotateX(180deg) rotateY(180deg) translate(200px, 200px);
+    }
+
+    100% {
+      transform: rotateX(360deg) rotateY(300deg) translate(400px, 400px);
+    }
+  }
+
+  .box {
+    width: 300px;
+    height: 300px;
+    margin: 100px auto;
+    position: relative;
+    /* perspective: 1000px; */
+    /* 将平面图形转化为立体图形 */
+    transform-style: preserve-3d;
+    animation: move 5s infinite alternate;
+  }
+
+  .public {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+  .left {
+    background: radial-gradient(
+      100% 100% at center,
+      rgb(218, 50, 50),
+      rgb(67, 207, 67),
+      rgb(75, 75, 197)
+    );
+    transform: rotateY(90deg) translateZ(-150px);
+  }
+  .right {
+    background-color: rgb(78, 78, 163);
+    transform: rotateY(90deg) translateZ(150px);
+  }
+  .top {
+    background-color: rgb(207, 32, 61);
+    transform: rotateX(90deg) translateZ(150px);
+  }
+  .bottom {
+    background-color: rgb(52, 170, 52);
+    transform: rotateX(90deg) translateZ(-150px);
+  }
+  .before {
+    background-color: rgb(223, 223, 57);
+    transform: translateZ(150px);
+  }
+  .after {
+    background-color: #000;
+    transform: translateZ(-150px);
+  }
+
+  @keyframes show {
+    0% {
+      transform: scale(0) rotate(0) ;
+    }
+    100% {
+      transform: scale(1) rotateX(360deg) translate(-50%, -50%);;
+    }
+  }
 
   .login-card {
     position: absolute;
@@ -109,6 +194,7 @@ export default {
     width: 440px;
     height: 340px;
     background: transparent;
+    animation: show 2s;
 
     .login-logo {
       margin-bottom: 20px;
